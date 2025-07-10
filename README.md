@@ -149,6 +149,8 @@ flowchart LR
 git clone https://github.com/miqbal303/triptales-genai-aws-bedrock
 cd triptales-genai-aws-bedrock
 
+#Create .env file from GitHub secrets (replace with actual GitHub secrets or ensure secrets.env exists in the repo)
+cp secrets.env .env
 # Install dependencies
 pip install -r requirements.txt
 
