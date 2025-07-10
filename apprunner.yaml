@@ -1,0 +1,35 @@
+version: 1.0
+# AWS App Runner configuration file
+
+# The name of your App Runner service
+name: TripTalesApp
+
+source:
+  repositoryType: GitHub
+  # Connect this during App Runner setup
+  codeRepository:
+    repositoryUrl: https://github.com/miqbal303/triptales-genai-aws-bedrock
+    sourceCodeVersion:
+      type: BRANCH
+      value: main  # Replace if using a different branch
+    configurationSource: api
+
+build:
+  runtime: python3
+  buildCommand: |
+    pip install --upgrade pip
+    pip install -r requirements.txt
+  startCommand: streamlit run app.py --server.port 8080 --server.enableCORS false
+
+#instanceConfiguration:
+#  cpu: 1 vCPU
+#  memory: 2 GB
+#  instanceRoleArn: arn:aws:iam::<your-account-id>:role/<your-app-runner-role>  # Optional, only if you use Bedrock or other AWS services
+
+healthCheckConfiguration:
+  protocol: TCP
+  path: /
+  interval: 10
+  timeout: 5
+  healthyThreshold: 1
+  unhealthyThreshold: 3
