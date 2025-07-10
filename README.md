@@ -29,15 +29,39 @@ TripTales is an AI-powered travel planning platform that generates personalized 
 - **OpenRouteService**: Map routing and geocoding
 
 ## Architecture Diagram
-![Architecture Diagram](architecture.png)
+```mermaid
+flowchart TD
+    %% ========== User Input Section ==========
+    A[User Browser] -->|Travel Preferences| B[Streamlit UI]
+    B --> C[Input Validation]
+    
+    %% ========== Backend Processing ==========
+    C --> D{Check MongoDB Cache}
+    D -->|Cache Hit| E[Return Cached Itinerary]
+    D -->|Cache Miss| F[Generate Query Hash]
+    F --> G[AWS Bedrock Claude 3]
+    G --> H[Itinerary Generation]
+    H --> I[Weather API Call]
+    
+    %% ========== Output Delivery ==========
+    I --> J[Interactive Map]
+    I --> K[PDF Export]
+    J --> L[User Browser]
+    K --> L
+```
 
 **Data Flow:**
-1. User inputs → Streamlit UI
-2. Query parameters → MongoDB cache check
-3. Cache miss → Bedrock API calls
-4. Generated content → MongoDB cache
-5. Results → Streamlit UI rendering
-6. Optional PDF export → User download
+```mermaid
+flowchart LR
+    subgraph AWS
+        B[Bedrock] --> C[EC2]
+        C --> D[S3]
+    end
+    subgraph App
+        A[Streamlit] --> B
+        A --> E[(MongoDB)]
+    end
+```
 
 ## Solution Details
 ### Model Selection
