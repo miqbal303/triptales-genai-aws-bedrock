@@ -30,6 +30,7 @@ TripTales is an AI-powered travel planning platform that generates personalized 
 
 ## Architecture Diagram
 ```mermaid
+%% Complete TripTales Architecture Flow
 flowchart TD
     %% ========== User Input Section ==========
     A[User Browser] -->|Travel Preferences| B[Streamlit UI]
@@ -42,12 +43,41 @@ flowchart TD
     F --> G[AWS Bedrock Claude 3]
     G --> H[Itinerary Generation]
     H --> I[Weather API Call]
+    I --> J[Weather-Aware Adjustments]
+    
+    %% ========== Image Generation Flow ==========
+    J --> K[AWS Bedrock Titan]
+    K --> L[Location Image Gen]
+    K --> M[Food Image Gen]
+    L --> N[Image Variants]
+    M --> N
+    N --> O[Image Editing Pipeline]
+    
+    %% ========== Data Storage ==========
+    O --> P[(MongoDB Atlas)]
+    P -->|Cache| D
+    P --> Q[User Session]
     
     %% ========== Output Delivery ==========
-    I --> J[Interactive Map]
-    I --> K[PDF Export]
-    J --> L[User Browser]
-    K --> L
+    Q --> R[Interactive Map]
+    Q --> S[PDF Generator]
+    R --> T[Folium/OpenRouteService]
+    S --> U[FPDF2]
+    T --> V[User Browser]
+    U --> V
+    
+    %% ========== AWS Services Integration ==========
+    subgraph AWS Cloud
+        G -.-> X[Bedrock API Gateway]
+        K -.-> X
+        X --> Y[IAM Auth]
+        Y --> Z[VPC Endpoint]
+    end
+    
+    %% ========== Error Handling Paths ==========
+    D -->|Error| Error[Fallback Local Cache]
+    G -->|Timeout| Retry[Exponential Backoff]
+    K -->|Quality Check| Regen[Regenerate Image]
 ```
 
 **Data Flow:**
@@ -55,7 +85,7 @@ flowchart TD
 flowchart LR
     subgraph AWS
         B[Bedrock] --> C[EC2]
-        C --> D[S3]
+        
     end
     subgraph App
         A[Streamlit] --> B
