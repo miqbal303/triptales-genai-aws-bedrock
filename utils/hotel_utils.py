@@ -24,8 +24,8 @@ def get_hotels_with_ratings(city, min_rating=3.5, radius=3000, max_results=5):
     conn = http.client.HTTPSConnection("hoteldiscoveryapi.p.rapidapi.com")
 
     headers = {
-        'x-rapidapi-key': os.getenv("X-rapidapi-key"),  # Replace with your actual key
-        'x-rapidapi-host': os.getenv("X-rapidapi-host")
+        'x-rapidapi-key': os.getenv("X_rapidapi_key"),  # Replace with your actual key
+        'x-rapidapi-host': os.getenv("X_rapidapi_host")
     }
 
     encoded_city = urllib.parse.quote(city)
