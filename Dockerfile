@@ -1,20 +1,22 @@
 # Use official Python 3.11 base image
 FROM python:3.11-slim
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy only requirements first to leverage Docker cache
-COPY requirements.txt .
+# Copy the current directory contents into the container
+COPY . .
+
+# Install OS packages and AWS CLI
+RUN apt-get update && \
+    apt-get install -y awscli && \
+    apt-get clean
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
-COPY . .
-
-# Expose App Runner-compatible port
+# Expose the port App Runner expects
 EXPOSE 8080
 
-# Run Streamlit app on App Runner's required port
+# Run Streamlit app on port 8080
 CMD ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
