@@ -253,7 +253,8 @@ def extract_activity_prompts_from_text(day_text, destination):
                 )
                 prompts.append((line, prompt))
             except Exception as e:
-                print(f"[Prompt Skipped] {line} → {e}")
+                #print(f"[Prompt Skipped] {line} → {e}")
+                pass
                 
     return prompts
 

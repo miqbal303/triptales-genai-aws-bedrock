@@ -62,5 +62,5 @@ def get_hotels_with_ratings(city, min_rating=3.5, radius=3000, max_results=5):
         return sorted(hotels, key=lambda x: x["rating"], reverse=True)[:max_results]
 
     except Exception as e:
-        print(f"[Hotel API Error]: {e}")
+        #print(f"[Hotel API Error]: {e}")
         return []

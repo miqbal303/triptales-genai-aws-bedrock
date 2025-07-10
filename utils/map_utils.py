@@ -65,7 +65,7 @@ def get_ors_route(start, end, profile="driving-car"):
         summary = route['routes'][0]['summary']
         return line_coords, round(summary['duration'] / 60, 1), round(summary['distance'] / 1000, 2)
     except Exception as e:
-        print(f"[ORS ERROR] {e}")
+        #print(f"[ORS ERROR] {e}")
         return None, None, None
 
 def generate_full_day_route_map(selected_hotel, day_places, travel_mode, show_return=True, map_height=700, route_color='blue'):

@@ -78,7 +78,8 @@ class DatabaseConnection:
             self.db.generated_images.create_index([("prompt_hash", 1)], unique=True)
             self.db.generated_images.create_index([("last_used", 1)], expireAfterSeconds=CACHE_EXPIRY_DAYS*24*60*60)
         except PyMongoError as e:
-            print(f"Warning: Failed to create indexes: {str(e)}")
+            #print(f"Warning: Failed to create indexes: {str(e)}")
+            pass
     
     def get_collection(self, collection_name):
         """Get a collection with connection retry logic"""
@@ -104,7 +105,7 @@ try:
     trips_collection = db_connection.get_collection("trips")
     images_collection = db_connection.get_collection("generated_images")
 except Exception as e:
-    print(f"Critical database error: {e}")
+    #print(f"Critical database error: {e}")
     trips_collection = None
     images_collection = None
 
@@ -120,7 +121,7 @@ def make_query_hash(destination: str, days: int, budget: int, interests: list, s
         }
         return sha256(json.dumps(query_dict, sort_keys=True).encode()).hexdigest()
     except Exception as e:
-        print(f"Error generating query hash: {str(e)}")
+        #print(f"Error generating query hash: {str(e)}")
         raise
 
 def get_cached_trip(query_hash: str) -> Optional[Dict[str, Any]]:
@@ -183,7 +184,7 @@ def get_cached_trip(query_hash: str) -> Optional[Dict[str, Any]]:
         
         return trip_data
     except Exception as e:
-        print(f"Database error while retrieving cached trip: {str(e)}")
+        #print(f"Database error while retrieving cached trip: {str(e)}")
         return None
 
 def cache_trip(query_hash: str, trip_data: Dict[str, Any]) -> bool:
@@ -248,7 +249,7 @@ def cache_trip(query_hash: str, trip_data: Dict[str, Any]) -> bool:
         )
         return result.acknowledged
     except Exception as e:
-        print(f"Failed to cache trip: {str(e)}")
+        #print(f"Failed to cache trip: {str(e)}")
         return False
 
 def get_cached_image(prompt: str) -> Optional[str]:
@@ -276,7 +277,7 @@ def get_cached_image(prompt: str) -> Optional[str]:
             return base64.b64encode(img_data).decode('utf-8')
         return None
     except Exception as e:
-        print(f"Database error while retrieving cached image: {str(e)}")
+        #print(f"Database error while retrieving cached image: {str(e)}")
         return None
 
 def cache_image(prompt: str, image_data: str) -> bool:
@@ -306,7 +307,7 @@ def cache_image(prompt: str, image_data: str) -> bool:
         )
         return result.acknowledged
     except Exception as e:
-        print(f"Failed to cache image: {str(e)}")
+        #print(f"Failed to cache image: {str(e)}")
         return False
 
 def get_similar_trips(destination: str, interests: list) -> list:
@@ -334,7 +335,7 @@ def get_similar_trips(destination: str, interests: list) -> list:
         
         return similar_trips
     except Exception as e:
-        print(f"Database error while finding similar trips: {str(e)}")
+        #print(f"Database error while finding similar trips: {str(e)}")
         return []
 
 def clear_old_cache(days_old: int = 30) -> int:
@@ -357,15 +358,15 @@ def clear_old_cache(days_old: int = 30) -> int:
         
         return trips_result.deleted_count + images_result.deleted_count
     except Exception as e:
-        print(f"Failed to clear old cache: {str(e)}")
+        #print(f"Failed to clear old cache: {str(e)}")
         return 0
     
 
-def test_db_connection():
-    if db_connection.health_check():
-        print("✅ Database connection working!")
-    else:
-        print("❌ Database connection failed")
+#def test_db_connection():
+#    if db_connection.health_check():
+#        print("✅ Database connection working!")
+#    else:
+#        print("❌ Database connection failed")
 
 #if __name__ == "__main__":
 #    test_db_connection()

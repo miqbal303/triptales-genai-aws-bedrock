@@ -1,6 +1,7 @@
 streamlit
 fpdf
 boto3
+awscli
 geopy
 Pillow
 python-dotenv

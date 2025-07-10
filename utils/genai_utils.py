@@ -106,7 +106,7 @@ def generate_addons(destination):
         if not isinstance(packing, dict):
             raise ValueError("Invalid packing list format")
     except Exception as e:
-        print(f"[ERROR] Packing list parse failed: {e}")
+        #print(f"[ERROR] Packing list parse failed: {e}")
         packing = {
             "Clothing": [], "Essentials": [], "Electronics": [],
             "Toiletries": [], "Documents": [], "Optional": []
@@ -182,7 +182,7 @@ def generate_image(prompt, style_preset=None):
 
         return image_data
     except Exception as e:
-        print(f"[ERROR] Image generation failed: {str(e)}")
+        #print(f"[ERROR] Image generation failed: {str(e)}")
         return None
 
 def generate_image_variants(prompt, num_variants=3):
@@ -213,7 +213,8 @@ def generate_image_variants(prompt, num_variants=3):
             if image_data:
                 variants.append(image_data.split(",")[-1] if image_data.startswith("data:image") else image_data)
         except Exception as e:
-            print(f"[ERROR] Variant {i} failed: {str(e)}")
+            #print(f"[ERROR] Variant {i} failed: {str(e)}")
+            pass
     
     return variants if variants else None
 
@@ -278,7 +279,7 @@ def edit_image_with_prompt(image_data, edit_prompt):
         return edited_image.split(",")[-1] if edited_image.startswith("data:image") else edited_image
         
     except Exception as e:
-        print(f"[ERROR] Image editing failed: {str(e)}")
+        #print(f"[ERROR] Image editing failed: {str(e)}")
         #import traceback
         #traceback.print_exc()
         return None
@@ -312,7 +313,7 @@ def transform_image_style(base64_image, style_prompt):
             return transformed_image.split(",")[-1] if transformed_image.startswith("data:image") else transformed_image
         return None
     except Exception as e:
-        print(f"[ERROR] Image transformation failed: {str(e)}")
+        #print(f"[ERROR] Image transformation failed: {str(e)}")
         return None
 
 def generate_day_to_night_image(base64_day_image):
