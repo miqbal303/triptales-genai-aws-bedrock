@@ -29,6 +29,40 @@ IMAGE_STYLES = {
     "Cyberpunk": "neon lights, futuristic, cyberpunk 2077 style"
 }
 
+def calculate_rooms_required(adults, children, infants):
+    """Calculate rooms needed based on common hotel rules:
+    - Max 2 adults per room
+    - Up to 2 children can share with adults per room
+    - Max 4 total occupants per room (excluding infants)
+    - Max 2 infants per room (infants don't count towards occupancy)
+    """
+    rooms = 0
+
+    # Allocate adults: max 2 per room
+    full_adult_rooms = adults // 2
+    remaining_adults = adults % 2
+    rooms += full_adult_rooms
+
+    # If 1 adult remains, assign a room and try to add up to 2 children
+    if remaining_adults:
+        rooms += 1
+        children = max(0, children - 2)
+
+    # Allocate remaining children: 2 per room
+    child_only_rooms = (children + 1) // 2  # ceil(children / 2)
+    rooms += child_only_rooms
+
+    # Infants: max 2 per room (not counted in occupancy)
+    max_infants_allowed = rooms * 2
+    if infants > max_infants_allowed:
+        extra_infant_rooms = (infants - max_infants_allowed + 1) // 2  # ceil
+        rooms += extra_infant_rooms
+
+    return rooms
+
+
+
+
 # Initialize session state
 if 'adults' not in st.session_state:
     st.session_state.adults = 2
@@ -36,6 +70,8 @@ if 'children' not in st.session_state:
     st.session_state.children = 0
 if 'infants' not in st.session_state:
     st.session_state.infants = 0
+if 'rooms_required' not in st.session_state:
+    st.session_state.rooms_required = 1
 if 'itinerary_text' not in st.session_state:
     st.session_state.itinerary_text = ""
 if 'packing_list' not in st.session_state:
@@ -69,6 +105,12 @@ with st.sidebar:
     st.session_state.adults = st.number_input("Adults (13+ years)", min_value=1, max_value=10, value=st.session_state.adults)
     st.session_state.children = st.number_input("Children (2-12 years)", min_value=0, max_value=10, value=st.session_state.children)
     st.session_state.infants = st.number_input("Infants (0-2 years)", min_value=0, max_value=5, value=st.session_state.infants)
+    st.session_state.rooms_required = calculate_rooms_required(
+        st.session_state.adults, 
+        st.session_state.children, 
+        st.session_state.infants
+    )
+    st.markdown(f"**Rooms Required:** {st.session_state.rooms_required}")
     
     st.header("✈️ Trip Details")
     destination = st.text_input("📍 Destination", "")
