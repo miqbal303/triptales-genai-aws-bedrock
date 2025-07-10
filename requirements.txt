@@ -1,0 +1,9 @@
+streamlit
+fpdf
+boto3
+geopy
+Pillow
+python-dotenv
+streamlit_folium
+openrouteservice
+pymongo
