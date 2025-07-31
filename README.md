@@ -139,7 +139,6 @@ flowchart LR
 - **Accessibility**: WCAG-compliant UI components
 
 ## Demo Links
-- **Hosted Application**: http://98.81.75.200:8501/
 - **Demo Video**: https://youtu.be/91z65H9pvIY
 - **Code Repository**: https://github.com/miqbal303/triptales-genai-aws-bedrock
 
